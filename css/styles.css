@@ -1,0 +1,77 @@
+/* generic */
+.mtop10 { margin-top: 10px; }
+.mtop15 { margin-top: 15px; }
+@media (max-width: 767px) {
+  .xmh15 { margin-left: 15px; margin-right: 15px; }
+}
+
+/* bootstrap extra */
+.table td.fit, 
+.table th.fit {
+    white-space: nowrap;
+    width: 1%;
+}
+
+/* login */
+input.ng-invalid:not(.ng-untouched) {
+  border-left: #e11 3px solid;
+}
+
+
+
+/* app */
+.mnav {
+  padding: 5px;
+  border-bottom: 1px solid darkgrey;
+}
+
+.mnav > a {
+  display: inline-block;
+  padding: 10px;
+  margin: 0px 2px;
+}
+
+.mnav > a.active {
+  background-color: lightgrey;
+  border-radius: 5px;
+}
+
+/* progress blocker */
+.pb-blocker {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 100;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, .3);
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration:0.5s;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-property: opacity;
+  transition-duration:0.5s;
+  transition-timing-function: ease-in-out;
+}
+.pb-blocker.active {
+  opacity: 1;
+}
+.pb-view {
+  max-width: 320px;
+  min-width: 240px;
+  min-height: 140px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background: white;
+  border-radius: 6px;
+}
+.pb-message {
+  padding-top: 4px;
+}
+.pb-icon-container {
+  padding: 16px;
+}
