@@ -7,5 +7,5 @@ export interface AppConfig {
 export let AppConfig = new OpaqueToken('app.config');
 export let APP_CONFIG: AppConfig = {
   appDefaultRoute: 'worker/manage',
-  userServiceHost: 'http://localhost:8000/service'
+  userServiceHost: '<enter workercrm-site host here>'
 };
