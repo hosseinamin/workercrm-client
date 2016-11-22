@@ -8,6 +8,10 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "typeRoots": [
+      "./node_modules/@types/",
+      "./node_modules/promise2-ab/types/"
+    ]
   }
 }

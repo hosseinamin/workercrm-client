@@ -42,26 +42,26 @@ export class PopupComponent {
   @ViewChild('modal') modalRef: ElementRef
   private resolvePopupPromise: Function = null
   
-  public popup(): Promise<void> {
+  public popup(): Promise2.IThenable<void> {
     if(!this.modalRef)
-      return Promise.resolve();
+      return Promise2.resolve();
     var modal = new bsn.Modal(this.modalRef.nativeElement, {})
     modal.open()
-    return <Promise<void>><any>
-      new Promise((resolve) => {
+    return <Promise2.IThenable<void>><any>
+      new Promise2((resolve) => {
         this.resolvePopupPromise = () => {
           this.resolvePopupPromise = null
           resolve()
         }
       })
   }
-  public close(): Promise<void> {
+  public close(): Promise2.IThenable<void> {
     if(!this.modalRef)
-      return Promise.resolve();
+      return Promise2.resolve();
     var modal = new bsn.Modal(this.modalRef.nativeElement, {})
     modal.close()
     this.onClose()
-    return <Promise<void>><any>new Promise((resolve) => {
+    return <Promise2.IThenable<void>><any>new Promise2((resolve) => {
       setTimeout(resolve, modal.options.duration)
     })
   }

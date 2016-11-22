@@ -1,7 +1,8 @@
 import { Component } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute, Params } from '@angular/router'
 
 import { GUIService } from './gui.service'
+import { UserService, Worker } from './user.service'
 
 import { FilterQueryComponent } from './filter-query.component'
 import { FilterTypeComponent } from './filter-type.component'
@@ -10,13 +11,13 @@ import { ManageTableComponent, TFButton, TFText } from './manage-table.component
 @Component({
   template: `
 <div class="row">
-  <div class="col-lg-2 col-md-2 col-sm-2 mtop15 xmh15">
+  <div class="col-lg-2 col-md-2 col-sm-1">
     <ul class="nav nav-stacked nav-pills">
-      <li><a class="btn btn-default" routerLink="/worker/new">{{ new_worker_label }}</a></li>
+      <li><a class="btn btn-success" routerLink="/worker/new"><i class="fa fa-plus fa-lg"></i> {{ new_worker_label }}</a></li>
     </ul>
   </div>
-  <div class="col-lg-10 col-md-10 col-sm-10 mtop15 xmh15">
-    <manage-table [fields]="fields" [items]="items" filterhasquery="true" [(filterquery)]="filterquery"></manage-table>
+  <div class="col-lg-10 col-md-10 col-sm-9 xmtop15">
+    <manage-table [fields]="fields" [items]="items" [itemsCount]="itemsCount" filterhasquery="true" [filterquery]="filterquery" (filterqueryChange)="onFilterQueryChange($event)" [loading]="loading" [(itemsOffset)]="offset" [(itemsLimit)]="limit" pageRoutePrefix="/worker/manage/"></manage-table>
   </div>
 </div>
 `
@@ -24,44 +25,83 @@ import { ManageTableComponent, TFButton, TFText } from './manage-table.component
 export class WorkerManageComponent {
   public new_worker_label = "New Worker"
   public filterquery = ""
-  public filterhastype = false
-  public filtertype_label = ""
-  public filtertype = ""
-  public filtertypes: any[] = []
+  public offset: number
+  public limit: number
   public fields = [
     new TFText('name', 'Name'),
     new TFButton('id', '', 'pencil', 'primary', 'Edit', true, this.onEditItem.bind(this)),
     new TFButton('id', '', 'trash', 'danger', 'Delete', true, this.onDeleteItem.bind(this))
   ]
-  public items = [
-    {
-      "id": "1",
-      "name": "Worker A"
-    },
-    {
-      "id": "2",
-      "name": "Worker B"
-    },
-  ]
-  constructor(private router: Router, private gui: GUIService) { }
+  public items: Worker[]
+  public itemsCount: number
+  public loading: boolean
+  private loadWorkersPromise: Promise2.IThenable<any>
+  constructor(private route: ActivatedRoute, private router: Router, private gui: GUIService, private userService: UserService) {
+    route.params.subscribe((params: Params) => {
+      var pagescroll = params['pagescroll']
+      this.updatePageScroll(pagescroll||'')
+      this._loadWorkers()
+    })
+  }
+
+  updatePageScroll(pagescroll: string) {
+    try {
+      var values = ManageTableComponent.parseItemsScroll(pagescroll);
+      this.offset = values[0]
+      this.limit = values[1]
+    } catch(err) {
+      this.offset = 0
+      this.limit = 10
+    }
+  }
+
+  _loadWorkers() {
+    var opts: {} = {
+      query: this.filterquery,
+      offset: this.offset,
+      limit: this.limit
+    }
+    if(this.loadWorkersPromise != null) {
+      this.loadWorkersPromise.finally(() => {
+        this.loadWorkersPromise = null
+        setTimeout(() => { this._loadWorkers() }, 0)
+      })
+      this.loadWorkersPromise.abort()
+      return
+    }
+    this.loading = true
+    this.loadWorkersPromise = this.userService.getWorkers(opts)
+    this.loadWorkersPromise
+      .then((response) => {
+        this.items = <Worker[]>response.records
+        this.itemsCount = response.count
+      })
+      .finally(() => { this.loading = false })
+      .catch(this.gui.alerterrorbound)
+        
+  }
   
   onFilterQueryChange(query: string) {
-
+    this.filterquery = query
+    this._loadWorkers()
   }
   onEditItem(item: any) {
-    return new Promise((resolve, reject) => {
+    return new Promise2((resolve, reject) => {
       resolve()
       this.router.navigate(['worker', 'edit', item.id])
     })
   }
-  onDeleteItem(item: any) {
+  onDeleteItem(item: Worker) {
     return this.gui.confirm(`Request to delete worker "${item.name}"`,
                             "Are you sure you want to delete it?")
       .then((confirmed) => {
         if(confirmed) {
-          console.log("delete: " + item.name)
-        } else {
-          console.log("skip delete")
+          this.gui.blockloading()
+          this.userService.deleteWorker(item.id)
+            .then(() => {
+              this._loadWorkers()
+            }).finally(this.gui.unblockbound)
+              .catch(this.gui.alerterrorbound)
         }
       })
   }

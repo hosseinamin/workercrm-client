@@ -1,6 +1,9 @@
-import { Component } from '@angular/core'
+import { Inject, Component, ViewChild } from '@angular/core'
+import { NgForm } from '@angular/forms'
 import { Router } from '@angular/router'
 import { UserService, User } from './user.service'
+import { GUIService } from './gui.service'
+import { AppConfig } from './app.config'
 
 @Component({
   template: `
@@ -19,7 +22,7 @@ import { UserService, User } from './user.service'
           <label for="password">Password:</label>
           <input class="form-control" [(ngModel)]="password" name="password" type="password" placeholder="Password" id="password" required />
         </div>
-        <button class="btn btn-success" type="submit" [disabled]="!form.valid">Login</button>
+        <button class="btn btn-success" type="submit">Login</button>
       </form>
     </div>
   </div>
@@ -29,12 +32,15 @@ import { UserService, User } from './user.service'
 export class LoginComponent {
   public username = ""
   public password = ""
-
-  constructor(private userService: UserService, private router: Router) { }
-
+  @ViewChild('form') form: NgForm
+  
+  constructor(@Inject(AppConfig) private appCfg: AppConfig, private gui: GUIService, private userService: UserService, private router: Router) { }
+  
   loginSubmit() {
+    this.gui.blockloading()
     this.userService.login(this.username, this.password).then(() => {
-      this.router.navigate(['dashboard'])
-    })
+      this.router.navigate([this.appCfg.appDefaultRoute])
+    }).finally(this.gui.unblockbound)
+      .catch(this.gui.alerterrorbound)
   }
 }

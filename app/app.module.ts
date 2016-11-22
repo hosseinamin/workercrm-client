@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
-import { FormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { RouterModule, Routes, Router } from '@angular/router'
 import { AppWrapperComponent } from './app-wrapper.component'
 import { UserService } from './user.service'
@@ -17,6 +17,7 @@ import { WorkerManageComponent }      from './worker-manage.component'
 import { ConfigManageComponent }      from './config-manage.component'
 import { WorkerEditComponent }      from './worker-edit.component'
 import { ConfigEditComponent }      from './config-edit.component'
+import { ConfigDataEditComponent }  from './configdata-edit.component'
 
 import { PlaceManageComponent }      from './place-manage.component'
 import { PlaceConfigManageComponent }      from './place-config-manage.component'
@@ -29,8 +30,10 @@ import { ManageTableComponent } from './manage-table.component'
 import { NeatSelectComponent } from './neatselect.component'
 import { ProgressBlockerComponent } from './progress-blocker.component'
 
+import { AppConfig, APP_CONFIG } from './app.config'
+
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: APP_CONFIG.appDefaultRoute, pathMatch: 'full' },
   { path: 'login', component: LoginComponent,
     canActivate: [AuthGuard] /* special use of AuthGuard */ },
   {
@@ -42,15 +45,19 @@ const routes: Routes = [
       {
         path: 'worker',
         children: [
+          { path: 'manage/:pagescroll', component: WorkerManageComponent },
           { path: 'manage', component: WorkerManageComponent },
           { path: 'edit/:id', component: WorkerEditComponent },
+          { path: 'new', component: WorkerEditComponent },
         ]
       },
       {
         path: 'config',
         children: [
+          { path: 'manage/:pagescroll', component: ConfigManageComponent },
           { path: 'manage', component: ConfigManageComponent },
           { path: 'edit/:id', component: ConfigEditComponent },
+          { path: 'new', component: ConfigEditComponent },
         ]
       },
       /* TODO:: add later
@@ -66,7 +73,8 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    ReactiveFormsModule
   ],
   declarations: [
     AppWrapperComponent,
@@ -80,6 +88,7 @@ const routes: Routes = [
     ConfigManageComponent,
     WorkerEditComponent,
     ConfigEditComponent,
+    ConfigDataEditComponent,
     
     PlaceManageComponent,
     PlaceConfigManageComponent,
@@ -93,7 +102,8 @@ const routes: Routes = [
     NeatSelectComponent
   ],
   providers: [
-    UserService, AuthGuard, GUIService
+    UserService, AuthGuard, GUIService,
+    { provide: AppConfig, useValue: APP_CONFIG }
   ],
   bootstrap: [ AppWrapperComponent ]
 })

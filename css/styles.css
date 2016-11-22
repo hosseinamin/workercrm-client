@@ -2,6 +2,8 @@
 .mtop10 { margin-top: 10px; }
 .mtop15 { margin-top: 15px; }
 @media (max-width: 767px) {
+  .xmtop10 { margin-top: 10px; }
+  .xmtop15 { margin-top: 15px; }
   .xmh15 { margin-left: 15px; margin-right: 15px; }
 }
 
@@ -22,7 +24,7 @@ input.ng-invalid:not(.ng-untouched) {
 /* app */
 .mnav {
   padding: 5px;
-  border-bottom: 1px solid darkgrey;
+  /* border-bottom: 1px solid darkgrey; */
 }
 
 .mnav > a {
@@ -32,8 +34,17 @@ input.ng-invalid:not(.ng-untouched) {
 }
 
 .mnav > a.active {
-  background-color: lightgrey;
+  background-color: white;
   border-radius: 5px;
+}
+@media (max-width: 767px) {
+  .mnav > a {
+    display: block;
+  }
+}
+.content-container {
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 /* progress blocker */
@@ -43,7 +54,7 @@ input.ng-invalid:not(.ng-untouched) {
   top: 0px;
   right: 0px;
   bottom: 0px;
-  z-index: 100;
+  z-index: 1100;
   opacity: 0;
   background-color: rgba(0, 0, 0, .3);
   -webkit-transition-property: opacity;
@@ -75,3 +86,77 @@ input.ng-invalid:not(.ng-untouched) {
 .pb-icon-container {
   padding: 16px;
 }
+
+/* manage table */
+.mtbl-loading {
+  text-align: center;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition-property: opacity, visibility;
+  -webkit-transition-duration:0.5s;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-property: opacity, visibility;
+  transition-duration:0.5s;
+  transition-timing-function: ease-in-out;
+}
+.mtbl-loading.active {
+  opacity: 1;
+  visibility: visible;
+}
+/* paging */
+.paging-nav {
+  padding: 5px;
+  text-align: center;
+}
+.paging-nav .more {
+
+}
+.paging-nav a {
+  display: inline-block;
+  margin: 2px;
+}
+.paging-nav a.active {
+  color: #331ab7;
+}
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper > .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+.navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.navbar-wrapper .navbar .container {
+  width: auto;
+}
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+@media (min-width: 768px) {
+  /* Navbar positioning foo */
+  .navbar-wrapper {
+    margin-top: 20px;
+  }
+  .navbar-wrapper .container {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .navbar-wrapper .navbar {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  /* The navbar becomes detached from the top, so we round the corners */
+  .navbar-wrapper .navbar {
+    border-radius: 4px;
+  }
+  
+  .content-container {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+}
+
