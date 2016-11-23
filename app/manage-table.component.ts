@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { GUIService } from './gui.service'
+import { SelectOption } from './neatselect.component'
 
 export abstract class TableField {
   public type: string
@@ -35,13 +36,19 @@ export class ItemClickEvent {
   selector: 'manage-table',
   template: `
 <div class="row">
-  <div class="col-lg-4 col-md-4 col-sm-4">
+  <div class="col-lg-4 col-md-4 col-sm-3">
     <filter-query *ngIf="filterhasquery" placeholder="Search" [mModel]="filterquery" (mModelChange)="onfilterqueryChange($event)"></filter-query>
   </div>
-  <div class="col-lg-4 col-md-4 col-sm-4">
+  <div class="col-lg-4 col-md-4 col-sm-3">
     <filter-type *ngIf="filterhastype" [label]="filtertype_label" [mModel]="filtertype" (mModelChange)="onfiltertypeChange($event)" [types]="filtertypes"></filter-type>
   </div>
-  <div class="col-lg-4 col-md-4 col-sm-3">
+  <div class="col-lg-3 col-md-3 col-sm-4">
+    <select class="form-control" name="itemsLimit" id="itemsLimit" [ngModel]="_itemsLimit" (ngModelChange)="onItemsLimitChange($event)">
+      <option *ngIf="selectOptionIndexOf(_itemsLimit,limits) == -1" [value]="_itemsLimit">{{_itemsLimit}}</option>
+      <option *ngFor="let limit of limits" [value]="limit.value">{{limit.label}}</option>
+    </select>
+  </div>
+  <div class="col-lg-1 col-md-1 col-sm-2">
     <div class="pull-right mtbl-loading" [class.active]="loading">
       <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
     </div>
@@ -86,6 +93,34 @@ export class ItemClickEvent {
 export class ManageTableComponent {
 
   constructor(public gui: GUIService) { }
+  select_limit_label: string = "Records limit"
+  limits: SelectOption[] = [
+    this.mkLimitOpts(10),
+    this.mkLimitOpts(20),
+    this.mkLimitOpts(50),
+    this.mkLimitOpts(100),
+  ]
+  mkLimitOpts(limit: number) {
+    return new SelectOption(limit+'', `${limit} Items per page`)
+  }
+  selectOptionIndexOf(val: string, options: SelectOption[]) {
+    val = val+''
+    for(var i = 0, len = options.length; i < len; ++i) {
+      if(val == options[i].value)
+        return i;
+    }
+    return -1;
+  }
+  @Output() itemsScrollChange = new EventEmitter<any>()
+  onItemsLimitChange(limit: string) {
+    if(this._itemsLimit+'' == limit)
+      return
+    this._itemsLimit = parseInt(limit)
+    this.onItemsScrollChange()
+  }
+  onItemsScrollChange() {
+    this.itemsScrollChange.emit({offset:this._itemsOffset,limit:this._itemsLimit})
+  }
   @Input() pageRoutePrefix: string = ""
   @Input() pagingMaxAmount: number = 10
   @Input() loading: boolean = false
@@ -150,8 +185,8 @@ export class ManageTableComponent {
     var pmamount = this.pagingMaxAmount,
     pageCount = Math.ceil(count / limit),
     page = Math.floor(offset / limit) + 1,
-    plen = Math.min(pageCount - page + 1, pmamount),
-    startpage = Math.max(1, page - Math.floor(pmamount - plen / 2.0)),
+    plen_half = Math.min(pageCount - page + 1, pmamount / 2.0),
+    startpage = Math.max(1, page - Math.floor(pmamount - plen_half)),
     splen = Math.min(pageCount - startpage + 1, pmamount);
     var ret: string[] = [];
     for(var i = 0; i < splen; ++i) {
@@ -161,8 +196,11 @@ export class ManageTableComponent {
     this.hasMoreLeft = startpage > 1;
     this.hasMoreRight = startpage + splen - 1 < pageCount;
   }
-  mkItemsScroll(offset: number): string {
-    return offset + "-" + this.itemsLimit
+  public mkItemsScroll(offset: number) {
+    return ManageTableComponent.mkItemsScroll(offset, this.itemsLimit)
+  }
+  public static mkItemsScroll(offset: number, limit: number): string {
+    return offset + "-" + limit
   }
   public static parseItemsScroll(value: string): number[] {
     var values = value.split('-').map((v) => parseInt(v))

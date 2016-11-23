@@ -7,7 +7,7 @@ import { FilterTypeComponent } from './filter-type.component'
 import { Router, ActivatedRoute } from '@angular/router'
 import { UserService, Config, ConfigData } from './user.service'
 import { GUIService } from './gui.service'
-
+import { ConfigDataEditComponent } from './configdata-edit.component'
 import { SelectOption } from './neatselect.component'
 
 @Component({
@@ -32,6 +32,7 @@ import { SelectOption } from './neatselect.component'
 `
 })
 export class ConfigEditComponent {
+  @ViewChild('form') form: NgForm
   configId: string = null
   config: Config = null
   configOptions: SelectOption[] = null
@@ -45,11 +46,14 @@ export class ConfigEditComponent {
       gui.blockloading()
       userService.getConfig(this.configId).then((response) => {
         this.config = <Config>response.record
+        // configdata is handled directly
+        delete this.config.configdata_id
       }).finally(gui.unblockbound)
         .catch(this.gui.alerterrorbound)
     }
   }
   onSave() {
+    ConfigDataEditComponent.validateData(this.config.configdata.data)
     var promise: Promise2.IThenable<any>;
     if(!this.configId) {
       promise = this.userService.createConfig(this.config)

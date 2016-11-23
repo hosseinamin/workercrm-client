@@ -11,13 +11,19 @@ import { ManageTableComponent, TFButton, TFText } from './manage-table.component
 @Component({
   template: `
 <div class="row">
+  <div class="col-lg-12">
+    <h4 style="margin-top:0px;">Manage Configurations</h4>
+    <p>With the power of search and pagination you can easily, Do it!</p>
+  </div>
+</div>
+<div class="row">
   <div class="col-lg-2 col-md-2 col-sm-3">
     <ul class="nav nav-stacked nav-pills">
       <li><a class="btn btn-success" routerLink="/config/new"><i class="fa fa-plus fa-lg"></i> {{ new_config_label }}</a></li>
     </ul>
   </div>
   <div class="col-lg-10 col-md-10 col-sm-9 xmtop15">
-    <manage-table [fields]="fields" [items]="items" [itemsCount]="itemsCount" filterhasquery="true" [filterquery]="filterquery" (filterqueryChange)="onFilterQueryChange($event)" [loading]="loading" [(itemsOffset)]="offset" [(itemsLimit)]="limit" pageRoutePrefix="/config/manage/"></manage-table>
+    <manage-table [fields]="fields" [items]="items" [itemsCount]="itemsCount" filterhasquery="true" [filterquery]="filterquery" (filterqueryChange)="onFilterQueryChange($event)" [loading]="loading" [itemsOffset]="offset" [itemsLimit]="limit" pageRoutePrefix="/config/manage/" (itemsScrollChange)="onItemsScrollChange($event)"></manage-table>
   </div>
 </div>
 `
@@ -44,6 +50,14 @@ export class ConfigManageComponent {
     })
   }
 
+  onItemsScrollChange(change: any) {
+    if(change.offset != this.offset || change.limit != this.limit) {
+      this.offset = change.offset
+      this.limit = change.limit
+      this.router.navigate(["/config/manage/",
+                ManageTableComponent.mkItemsScroll(this.offset, this.limit)])
+    }
+  }
   updatePageScroll(pagescroll: string) {
     try {
       var values = ManageTableComponent.parseItemsScroll(pagescroll);

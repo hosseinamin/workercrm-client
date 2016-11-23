@@ -241,14 +241,8 @@ export class UserService {
 
   private __validateconfigdata(data: any)  {
     if(data.configdata) {
-      if(data.configdata.id) {
-        if(!data.configdata_id)
-          data.configdata_id = data.configdata.id
-        delete data.configdata
-      } else {
-        data.configdata = JSON.stringify(data.configdata.data);
-        delete data.configdata_id
-      }
+      delete data.configdata_id
+      data.configdata = JSON.stringify(data.configdata.data);
     }
   }
 }

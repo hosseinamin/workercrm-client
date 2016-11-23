@@ -7,12 +7,31 @@ import { AppConfig } from './app.config'
 
 @Component({
   template: `
-<div class="container">
+<div class="container mtop15">
   <div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      <div>
-        <h2>Welcome</h2>
+    <div class="col-lg-6 col-md-7 col-sm-8">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4">
+          <img class="xwp-5 center-block img-responsive" src="assets/ab-256.png" alt="Aminbros" />
+        </div>
+        <div class="col-lg-8 col-lg-8 col-sm-8">
+          <h2>Welcome</h2>
+          <p>
+            Aminbros's worker-crm demo project, An example of cloud management
+            system made with powerful frameworks (Angular 2 and Django).
+          </p>
+          <p>
+            This startup project has few quality features. Please login as demo user.
+          </p>
+          <pre>Username: demo
+Passowrd: demo</pre>
+          <p>
+            This service does get reset every 2 hours.
+          </p>
+        </div>
       </div>
+    </div>
+    <div class="col-lg-6 col-md-5 col-sm-4">
       <form (ngSubmit)="loginSubmit()" #form="ngForm">
         <div class="form-group">
           <label for="username">Username:</label>

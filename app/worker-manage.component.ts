@@ -11,13 +11,19 @@ import { ManageTableComponent, TFButton, TFText } from './manage-table.component
 @Component({
   template: `
 <div class="row">
-  <div class="col-lg-2 col-md-2 col-sm-1">
+  <div class="col-lg-12">
+    <h4 style="margin-top:0px;">Manage Workers</h4>
+    <p>With the power of search and pagination you can easily, Do it!</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-2 col-md-2 col-sm-3">
     <ul class="nav nav-stacked nav-pills">
       <li><a class="btn btn-success" routerLink="/worker/new"><i class="fa fa-plus fa-lg"></i> {{ new_worker_label }}</a></li>
     </ul>
   </div>
   <div class="col-lg-10 col-md-10 col-sm-9 xmtop15">
-    <manage-table [fields]="fields" [items]="items" [itemsCount]="itemsCount" filterhasquery="true" [filterquery]="filterquery" (filterqueryChange)="onFilterQueryChange($event)" [loading]="loading" [(itemsOffset)]="offset" [(itemsLimit)]="limit" pageRoutePrefix="/worker/manage/"></manage-table>
+    <manage-table [fields]="fields" [items]="items" [itemsCount]="itemsCount" filterhasquery="true" [filterquery]="filterquery" (filterqueryChange)="onFilterQueryChange($event)" [loading]="loading" [itemsOffset]="offset" [itemsLimit]="limit" pageRoutePrefix="/worker/manage/" (itemsScrollChange)="onItemsScrollChange($event)"></manage-table>
   </div>
 </div>
 `
@@ -44,6 +50,14 @@ export class WorkerManageComponent {
     })
   }
 
+  onItemsScrollChange(change: any) {
+    if(change.offset != this.offset || change.limit != this.limit) {
+      this.offset = change.offset
+      this.limit = change.limit
+      this.router.navigate(["/worker/manage/",
+                ManageTableComponent.mkItemsScroll(this.offset, this.limit)])
+    }
+  }
   updatePageScroll(pagescroll: string) {
     try {
       var values = ManageTableComponent.parseItemsScroll(pagescroll);
