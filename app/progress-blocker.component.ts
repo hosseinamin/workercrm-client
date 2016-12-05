@@ -17,8 +17,8 @@ import { Component, ViewChild } from '@angular/core'
 })
 export class ProgressBlockerComponent {
   public message: string
-  private fadeIn: boolean = false
-  private blocking: boolean = false
+  fadeIn: boolean = false
+  blocking: boolean = false
   public isBlocking() {
     return this.blocking
   }

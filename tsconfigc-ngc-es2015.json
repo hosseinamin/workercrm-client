@@ -1,19 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "es2015",
+    "module": "es2015",
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": [
-      "./node_modules/@types-es5/",
       "./node_modules/@types/",
       "./node_modules/promise2-ab/types/"
     ]
   },
-  "files": [ "app/main.ts" ]
+  "compileOnSave": false,
+  "files": [
+    "app/main.ts"
+  ]
 }

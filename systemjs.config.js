@@ -24,7 +24,7 @@
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
       '@angular/upgrade': 'npm:@angular/upgrade/bundles/upgrade.umd.js',
 
-      'bootstrap-native': 'node_modules/bootstrap.native/dist/bootstrap-native.min.js',
+      'bootstrap-native': 'node_modules/bootstrap.native/dist/bootstrap-native.js',
       // other libraries
       'rxjs':                      'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api',

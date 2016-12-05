@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Output, Input, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router'
 import { UserService, User } from './user.service'
-var bsn: any = require('bootstrap-native')
+
+declare var Collapse: any
 
 @Component({
   template: `
@@ -49,7 +50,7 @@ export class AppComponent {
   }
   ngAfterContentInit() {
     var collapse: any = this.navbarToggle.nativeElement, options: any = {};
-    new bsn.Collapse(collapse,options);
+    new Collapse(collapse,options);
   }
   onExitClick(event: any) {
     event.preventDefault()

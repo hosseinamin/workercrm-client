@@ -107,7 +107,7 @@ export class ConfigDataEditComponent {
     data.retry_timeout = data.retry_timeout === undefined ? 60 : data.retry_timeout
     data.version = data.version === undefined ? "stable" : data.version
   }
-  public static validateData(data) {
+  public static validateData(data: any) {
     data.max_depth = isNaN(parseInt(data.max_depth)) ? 10 : parseInt(data.max_depth)
     data.priority = isNaN(parseInt(data.priority)) ? 5 : parseInt(data.priority)
     data.retry_timeout = isNaN(parseInt(data.retry_timeout)) ? 60 : parseInt(data.retry_timeout)

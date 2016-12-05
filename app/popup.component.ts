@@ -7,7 +7,7 @@ export class PopupButton {
               public onClick: Function) { }
 }
 
-var bsn: any = require('bootstrap-native')
+declare var Modal: any
 
 @Component({
   selector: 'popup',
@@ -45,7 +45,7 @@ export class PopupComponent {
   public popup(): Promise2.IThenable<void> {
     if(!this.modalRef)
       return Promise2.resolve();
-    var modal = new bsn.Modal(this.modalRef.nativeElement, {})
+    var modal = new Modal(this.modalRef.nativeElement, {})
     modal.open()
     return <Promise2.IThenable<void>><any>
       new Promise2((resolve) => {
@@ -58,21 +58,23 @@ export class PopupComponent {
   public close(): Promise2.IThenable<void> {
     if(!this.modalRef)
       return Promise2.resolve();
-    var modal = new bsn.Modal(this.modalRef.nativeElement, {})
-    modal.close()
-    this.onClose()
-    return <Promise2.IThenable<void>><any>new Promise2((resolve) => {
-      setTimeout(resolve, modal.options.duration)
-    })
+    var modal = new Modal(this.modalRef.nativeElement, {})
+    // TODO:: check if modal is closed already
+    return this.onClose()
   }
 
   onClose() {
     if(!this.modalRef)
       return;
-    var modal = new bsn.Modal(this.modalRef.nativeElement, {})
+    var modal = new Modal(this.modalRef.nativeElement, {})
     modal.close()
-    if(this.resolvePopupPromise != null)
-      setTimeout(this.resolvePopupPromise, modal.options.duration)
+    return <Promise2.IThenable<void>><any>new Promise2((resolve) => {
+      setTimeout(() => {
+        if(this.resolvePopupPromise != null)
+          this.resolvePopupPromise();
+        resolve()
+      }, modal.options.duration)
+    })
   }
   onDismissed(e: any) {
     if(!this.modalRef)
@@ -80,7 +82,7 @@ export class PopupComponent {
     var modalEl = this.modalRef.nativeElement;
     // bootstrap dismiss check
     if ( e.target.parentNode.getAttribute('data-dismiss') === 'modal' || e.target.getAttribute('data-dismiss') === 'modal' || e.target === modalEl ) {
-      var modal = new bsn.Modal(this.modalRef.nativeElement, {})
+      var modal = new Modal(this.modalRef.nativeElement, {})
       if(this.resolvePopupPromise != null)
         setTimeout(this.resolvePopupPromise, modal.options.duration)
     }

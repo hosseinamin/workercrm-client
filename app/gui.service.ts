@@ -55,7 +55,7 @@ export class GUIService {
           mpopup.title = title
           mpopup.body = body
           mpopup.buttons = [
-            new PopupButton("Yes", "default", () => {
+            new PopupButton("Yes", "primary", () => {
               resolveStatus = true
               mpopup.close()
             }),

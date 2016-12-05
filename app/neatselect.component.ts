@@ -24,10 +24,9 @@ export function SelectMultipleRequiredValidator(c: FormControl) {
 export class NeatSelectComponent {
   @Input() name: string
   private _value: any
-  get value(): any {
+  @Input() get value(): any {
     return this._value
   }
-  @Input('value')
   set value(value) {
     if(!value)
       value = ''
@@ -39,10 +38,10 @@ export class NeatSelectComponent {
   }
   @Output() valueChange = new EventEmitter<any>()
   private _options: string[]
-  get options() {
+  @Input() get options() {
     return this._options
   }
-  @Input() set options(options) {
+  set options(options) {
     if(!options)
       options = []
     this._options = options

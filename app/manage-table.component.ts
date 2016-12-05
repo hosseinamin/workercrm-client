@@ -103,7 +103,7 @@ export class ManageTableComponent {
   mkLimitOpts(limit: number) {
     return new SelectOption(limit+'', `${limit} Items per page`)
   }
-  selectOptionIndexOf(val: string, options: SelectOption[]) {
+  selectOptionIndexOf(val: any, options: SelectOption[]) {
     val = val+''
     for(var i = 0, len = options.length; i < len; ++i) {
       if(val == options[i].value)
