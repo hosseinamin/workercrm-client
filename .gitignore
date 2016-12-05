@@ -17,3 +17,4 @@ app/app.config.ts
 !systemjs.config.js
 !typings/typings.d.ts
 !wallaby.js
+!rollup.config.js
